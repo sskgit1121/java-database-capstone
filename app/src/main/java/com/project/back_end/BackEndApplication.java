@@ -10,6 +10,7 @@ public class BackEndApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BackEndApplication.class, args);
+		System.out.println("Smart Clinic Management System(CMS) is Running!");
 	}
 
 }
