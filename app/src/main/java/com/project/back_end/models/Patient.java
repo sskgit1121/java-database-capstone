@@ -9,6 +9,7 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Transient;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -19,6 +20,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
 /**
  * ==========================================
  * 3. PATIENT MODEL (MySQL Relational Entity)
@@ -26,7 +28,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "patients")
-class Patient {
+public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,15 +55,25 @@ class Patient {
     @Size(max = 255, message = "Address cannot exceed 255 characters")
     private String address;
 
+    // Advanced Enhanced Fields
+    @NotNull(message = "Date of birth is required")
+    @Past(message = "Date of birth must be a date in the past")
+    private LocalDate dateOfBirth;
+
+    @Size(max = 100, message = "Insurance provider name cannot exceed 100 characters")
+    private String insuranceProvider;
+
     // Constructors
     public Patient() {}
 
-    public Patient(String name, String email, String password, String phone, String address) {
+    public Patient(String name, String email, String password, String phone, String address, LocalDate dateOfBirth, String insuranceProvider) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.address = address;
+        this.dateOfBirth = dateOfBirth;
+        this.insuranceProvider = insuranceProvider;
     }
 
     // Getters and Setters
@@ -111,5 +123,21 @@ class Patient {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getInsuranceProvider() {
+        return insuranceProvider;
+    }
+
+    public void setInsuranceProvider(String insuranceProvider) {
+        this.insuranceProvider = insuranceProvider;
     }
 }

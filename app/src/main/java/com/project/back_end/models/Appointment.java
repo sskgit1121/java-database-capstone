@@ -21,9 +21,14 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+/**
+ * ==========================================
+ * 4. APPOINTMENT MODEL (MySQL Relational Entity)
+ * ==========================================
+ */
 @Entity
 @Table(name = "appointments")
-class Appointment {
+public class Appointment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,14 +49,20 @@ class Appointment {
     @NotNull(message = "Appointment status is required")
     private int status; // 0 = Scheduled, 1 = Completed
 
+    // Advanced Enhanced Fields
+    @NotNull(message = "Reason for visit is required")
+    @Size(min = 3, max = 255, message = "Reason for visit must be between 3 and 255 characters")
+    private String reasonForVisit;
+
     // Constructors
     public Appointment() {}
 
-    public Appointment(Doctor doctor, Patient patient, LocalDateTime appointmentTime, int status) {
+    public Appointment(Doctor doctor, Patient patient, LocalDateTime appointmentTime, int status, String reasonForVisit) {
         this.doctor = doctor;
         this.patient = patient;
         this.appointmentTime = appointmentTime;
         this.status = status;
+        this.reasonForVisit = reasonForVisit;
     }
 
     /**
@@ -112,5 +123,13 @@ class Appointment {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getReasonForVisit() {
+        return reasonForVisit;
+    }
+
+    public void setReasonForVisit(String reasonForVisit) {
+        this.reasonForVisit = reasonForVisit;
     }
 }

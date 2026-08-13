@@ -13,13 +13,15 @@ import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
 /**
  * ==========================================
  * 2. DOCTOR MODEL (MySQL Relational Entity)
@@ -57,16 +59,31 @@ public class Doctor {
     @ElementCollection
     private List<String> availableTimes;
 
+    // Advanced Enhanced Fields
+    @Min(value = 0, message = "Years of experience cannot be negative")
+    @Max(value = 60, message = "Years of experience must be realistic")
+    private int yearsOfExperience;
+
+    @Size(max = 255, message = "Clinic address cannot exceed 255 characters")
+    private String clinicAddress;
+
+    @Min(value = 1, message = "Rating must be at least 1")
+    @Max(value = 5, message = "Rating cannot exceed 5")
+    private double rating;
+
     // Constructors
     public Doctor() {}
 
-    public Doctor(String name, String specialty, String email, String password, String phone, List<String> availableTimes) {
+    public Doctor(String name, String specialty, String email, String password, String phone, List<String> availableTimes, int yearsOfExperience, String clinicAddress, double rating) {
         this.name = name;
         this.specialty = specialty;
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.availableTimes = availableTimes;
+        this.yearsOfExperience = yearsOfExperience;
+        this.clinicAddress = clinicAddress;
+        this.rating = rating;
     }
 
     // Getters and Setters
@@ -124,5 +141,29 @@ public class Doctor {
 
     public void setAvailableTimes(List<String> availableTimes) {
         this.availableTimes = availableTimes;
+    }
+
+    public int getYearsOfExperience() {
+        return yearsOfExperience;
+    }
+
+    public void setYearsOfExperience(int yearsOfExperience) {
+        this.yearsOfExperience = yearsOfExperience;
+    }
+
+    public String getClinicAddress() {
+        return clinicAddress;
+    }
+
+    public void setClinicAddress(String clinicAddress) {
+        this.clinicAddress = clinicAddress;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 }
