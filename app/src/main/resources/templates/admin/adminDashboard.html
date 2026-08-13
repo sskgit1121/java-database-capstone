@@ -106,4 +106,77 @@ with search, filter, and modal functionality.
     * Finish the structure by properly closing all tags.
 
  -->
+ <!-- adminDashboard.html -->
+ <!DOCTYPE html>
+ <html lang="en" xmlns:th="http://thymeleaf.org">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Admin Dashboard</title>
+
+     <!-- Thymeleaf CSS Links -->
+     <link rel="stylesheet" th:href="@{/assets/css/adminDashboard.css}">
+     <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+
+     <!-- Core Engine Scripts with Defer to prevent render-blocking -->
+     <script th:src="@{/js/render.js}" defer></script>
+     <script th:src="@{/js/util.js}" defer></script>
+     <script th:src="@{/js/components/header.js}" defer></script>
+     <script th:src="@{/js/components/footer.js}" defer></script>
+ </head>
+ <body>
+
+     <div class="container">
+         <div class="wrapper">
+             
+             <!-- Target node placeholder to load the dynamic header via header.js -->
+             <div id="header"></div>
+
+             <!-- Main Interactive Workspace Area -->
+             <main class="main-content">
+                 
+                 <!-- Filter Panel Control Center -->
+                 <section class="controls-panel">
+                     <!-- Text Search Target bar -->
+                     <input type="text" id="searchBar" placeholder="search by doctor name" />
+                     
+                     <!-- Sorting parameter options by operational shift hours -->
+                     <select id="timeFilter" class="filter-select">
+                         <option value="all">All Hours / Availability</option>
+                         <option value="morning">Morning Shifts (8AM - 12PM)</option>
+                         <option value="afternoon">Afternoon Shifts (12PM - 5PM)</option>
+                     </select>
+
+                     <!-- Filter parameters by specialized practice fields -->
+                     <select id="specialtyFilter" class="filter-select">
+                         <option value="all">All Medical Specialties</option>
+                         <option value="cardiology">Cardiology</option>
+                         <option value="pediatrics">Pediatrics</option>
+                         <option value="neurology">Neurology</option>
+                         <option value="dermatology">Dermatology</option>
+                     </select>
+                 </section>
+
+                 <!-- Target Injection Node for structural doctor lists profiles cards -->
+                 <div id="content"></div>
+
+             </main>
+
+             <!-- Target node placeholder to load the dynamic footer via footer.js -->
+             <div id="footer"></div>
+
+         </div>
+     </div>
+
+     <!-- Hidden Activation Framework Modal Popup Layout Component -->
+     <div id="modal" class="modal">
+         <span id="closeModal" class="close">&times;</span>
+         <div id="modal-body"></div>
+     </div>
+
+     <!-- Business Module Service Controllers linking underlying functional logic -->
+     <script type="module" src="../js/services/adminDashboard.js" defer></script>
+     <script type="module" src="../js/components/doctorCard.js" defer></script>
+ </body>
+ </html>
 

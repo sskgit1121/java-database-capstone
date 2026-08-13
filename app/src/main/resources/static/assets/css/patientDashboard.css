@@ -1,80 +1,110 @@
 /* This is the style sheet for the patientDashboard.html */
-  .card-actions {
-    background-color: #244557;
-    padding: 10px;
+/* ==========================================================================
+   DOCTOR CARD ACTIONS & INTERACTIVE HOVER ELEMENTS
+   ========================================================================== */
+.card-actions {
+    background-color: #1e293b; /* Dark background matching the theme guidelines */
+    color: #ffffff;
     text-align: center;
-  }
-
-  .card-actions:hover{
-    background-color: #1c3745;
-  }
-  .ripple-overlay {
-    position: fixed;
-    width: 20px;
-    height: 20px;
-    background-color: #1c3745;
-    border-radius: 50%;
-    z-index: 9999;
-    transform: translate(-50%, -50%) scale(0);
-    transition: transform 1s ease-out, opacity 1s ease;
-  }
-  
-  .ripple-overlay.active {
-    transform: translate(-50%, -50%) scale(150);
-    opacity: 1;
-  }
-  
-  .modalApp {
-    position: fixed;
-  bottom: -100%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 50%;
-  background: #fff;
-  padding: 20px;
-  z-index: 10000;
-  transition: bottom 1.5s ease-in;
-  box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.3);
-  border-radius: 10px 10px 0 0;
-  text-align: center;
-  }
-  
-  .modalApp.active {
-    bottom: 0;
-  }
-  
-  .modalApp h2 {
-    margin-top: 20px;
-  }
-  
-  .modalApp input {
-    display: block;
-    margin: 10px auto;
-    padding: 10px;
-    width: 90%;
-    margin-bottom: 40px;
-  }
-
-  .modalApp select {
-    display: block;
-    margin: 10px auto;
-    padding: 10px;
-    width: 90%;
-    margin-bottom: 40px;
-  }
-  
-  .confirm-booking {
-    padding: 10px 20px;
-    background: #1c3745;
-    color: #fff;
-    border: none;
+    padding: 1rem;
+    border-radius: 0 0 12px 12px;
+    margin-top: auto;
     cursor: pointer;
-    
-  
-    
-  }
-  .confirm-booking:hover {
-    filter: brightness(1.2);
-    background-color: #1c3745;
-  }
+    transition: background-color 0.2s ease-in-out;
+}
+
+.card-actions:hover {
+    background-color: #0f172a; /* Slightly darken the background on mouseover for feedback */
+}
+
+/* ==========================================================================
+   VISUAL RIPPLE OVERLAY SYSTEM FEEDBACK
+   ========================================================================== */
+.click-ripple-effect {
+    position: fixed; /* Fixed positioning to ensure visibility anywhere on screen viewport */
+    border-radius: 50%;
+    background-color: rgba(2, 132, 199, 0.3);
+    pointer-events: none;
+    transform: scale(0);
+    animation: rippleAnimation 0.6s cubic-bezier(0.1, 0.8, 0.3, 1);
+    z-index: 9999;
+}
+
+@keyframes rippleAnimation {
+    to {
+        transform: scale(4); /* Smooth scaling expansion animation outwards to simulate feedback clicks */
+        opacity: 0;
+    }
+}
+
+/* ==========================================================================
+   BOTTOM POP-UP DRAWERS MODAL FOR APPOINTMENTS BOOKING
+   ========================================================================== */
+.modalApp {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 100%); /* Initially hidden sliding offset out from bottom margins */
+    width: 100%;
+    max-width: 500px;
+    background-color: #ffffff;
+    padding: 2rem 1.5rem;
+    border-radius: 20px 20px 0 0; /* Clear rounded top corners layout structure */
+    box-shadow: 0 -10px 25px -5px rgba(15, 23, 42, 0.15);
+    z-index: 2000;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* Smooth transitional curves execution hook */
+}
+
+/* Toggled active configuration framework layout slide transition entry point rules */
+.modalApp.active {
+    transform: translate(-50%, 0);
+}
+
+/* ==========================================================================
+   FORM CONTROLS FIELDS INSIDE DOCK BOOKING MODALS
+   ========================================================================== */
+.modalApp form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centered on the layout viewport pages */
+    gap: 1.25rem;
+    width: 100%;
+}
+
+.modalApp .form-control {
+    width: 90%; /* Uniform sizing bounds matching specification constraints layouts */
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    outline: none;
+    background-color: #f8fafc;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+
+.modalApp .form-control:focus {
+    border-color: #1e293b;
+}
+
+/* ==========================================================================
+   BOOKING CONFIRMATION ACTION BUTTON CONFIGURATIONS
+   ========================================================================== */
+.booking-confirm-btn {
+    width: 90%;
+    background-color: #1e293b; /* Premium clean dark-colored themed background anchor */
+    color: #ffffff;
+    border: none;
+    padding: 0.875rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: filter 0.2s ease;
+}
+
+.booking-confirm-btn:hover {
+    filter: brightness(1.2); /* Increases brightness slightly on hover states for responsiveness inputs */
+}
+
   

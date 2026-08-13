@@ -1,63 +1,80 @@
 <!-- patientDashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/svg+xml" href="../assets/images/logo/logo.png" />
-    <title>PatientDashboard</title>
-    <link rel="stylesheet" href="../assets/css/adminDashboard.css">
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/patientDashboard.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard - Browse Doctors</title>
+    
+    <!-- Branding Favicon link -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22 width=%22100%22 height=%22100%22><text y=%220.9em%22 font-size=%2290%22>🏥</text></svg>">
+
+    <!-- Stylesheet Integrations -->
+    <link rel="stylesheet" href="../assets/css/adminDashboard.css" />
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/patientDashboard.css" />
+
+    <!-- Utility & Reusable Layout Component Scripts with defer -->
     <script src="../js/render.js" defer></script>
     <script src="../js/util.js" defer></script>
     <script src="../js/components/header.js" defer></script>
     <script src="../js/components/footer.js" defer></script>
+    
+    <!-- Reusable Modals Components Module -->
     <script type="module" src="../js/components/modals.js"></script>
 </head>
-
 <body onload="renderContent()">
+
     <div class="container">
         <div class="wrapper">
+            
+            <!-- Dynamic Inject Anchor Target Node for the role-based header -->
             <div id="header"></div>
+
+            <!-- Main Interactive Workspace Area -->
             <main class="main-content">
+                
+                <!-- Search bar input fields -->
                 <input type="text" id="searchBar" class="searchBar" placeholder="Search Bar for custom output" />
+
+                <!-- Filters Control Section Dropdowns wrapper -->
                 <div class="filter-wrapper">
                     <select class="filter-select" id="filterTime">
-                        <option value="">Sort by Time</option>
-                        <option value="AM">AM</option>
-                        <option value="PM">PM</option>
+                        <option value="all">Filter Availability (All)</option>
+                        <option value="AM">Morning (AM Shifts)</option>
+                        <option value="PM">Afternoon (PM Shifts)</option>
                     </select>
+                    
                     <select class="filter-select" id="filterSpecialty">
-                        <option value="">Filter by Specialty</option>
-                        <option value="Cardiologist">Cardiologist</option>
-                        <option value="Dermatologist">Dermatologist</option>
-                        <option value="Neurologist">Neurologist</option>
-                        <option value="Pediatrician">Pediatrician</option>
-                        <option value="Orthopedic">Orthopedic</option>
-                        <option value="Gynecologist">Gynecologist</option>
-                        <option value="Psychiatrist">Psychiatrist</option>
-                        <option value="Dentist">Dentist</option>
-                        <option value="Ophthalmologist">Ophthalmologist</option>
-                        <option value="Ent">ENT Specialist</option>
-                        <option value="Urologist">Urologist</option>
-                        <option value="Oncologist">Oncologist</option>
-                        <option value="Gastroenterologist">Gastroenterologist</option>
-                        <option value="General">General Physician</option>
+                        <option value="all">Filter Specialty (All)</option>
+                        <option value="cardiology">Cardiology</option>
+                        <option value="pediatrics">Pediatrics</option>
+                        <option value="neurology">Neurology</option>
+                        <option value="dermatology">Dermatology</option>
                     </select>
                 </div>
+
+                <!-- Content container for dynamically rendered doctor cards cards layout -->
                 <div id="content"></div>
+
             </main>
+
+            <!-- Dynamic Inject Anchor Target Node for the common footer -->
             <div id="footer"></div>
+
         </div>
     </div>
+
+    <!-- Reusable Modal Layout Markup Framework Structure -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeModal">&times;</span>
             <div id="modal-body"></div>
         </div>
     </div>
-    <script type="module" src="../js/patientDashboard.js" defer></script>
-</body>
 
+    <!-- Patient Dashboard State Management logic module handling execution scripts -->
+    <script type="module" src="../js/patientDashboard.js" defer></script>
+
+</body>
 </html>

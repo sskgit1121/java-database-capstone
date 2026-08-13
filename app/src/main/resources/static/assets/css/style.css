@@ -380,3 +380,149 @@
   accent-color: #015c5db8; 
 }
 
+/* Custom Dashboard Component Tweaks */
+.table-empty-message {
+    text-align: center;
+    color: #666666;
+    padding: 1.5rem !important;
+    font-style: italic;
+}
+
+.table-error-alert {
+    text-align: center;
+    color: #dc3545;
+    background-color: #fdf2f2;
+    font-weight: bold;
+    padding: 1.5rem !important;
+}
+
+/* ==========================================================================
+   MOBILE OPTIMIZATION BREAKPOINTS (Responsive Grid Adjustments)
+   ========================================================================== */
+   /* ==========================================================================
+      Dashboard Component Enhancements & Status Badges
+      ========================================================================== */
+
+   .table-empty-message {
+       text-align: center;
+       color: #666666;
+       padding: 2rem !important;
+       font-style: italic;
+       background-color: #fafafa;
+   }
+
+   .table-error-alert {
+       text-align: center;
+       color: #dc3545;
+       background-color: #fdf2f2;
+       border: 1px solid #f5c6cb;
+       font-weight: bold;
+       padding: 2rem !important;
+   }
+
+   .status-tag {
+       display: inline-block;
+       padding: 0.25rem 0.5rem;
+       font-size: 0.75rem;
+       font-weight: bold;
+       border-radius: 4px;
+       margin-right: 0.5rem;
+   }
+
+   .tag-pending {
+       background-color: #fff3cd;
+       color: #856404;
+       border: 1px solid #ffeeba;
+   }
+
+   .tag-consulted {
+       background-color: #d4edda;
+       color: #155724;
+       border: 1px solid #c3e6cb;
+   }
+
+   /* ==========================================================================
+      Mobile Optimization Breakpoints (Responsive System)
+      ========================================================================== */
+
+   /* Tablet Breakpoint (Screens under 768px wide) */
+   @media screen and (max-width: 768px) {
+       .filter-bar {
+           display: flex;
+           flex-direction: column;
+           align-items: stretch;
+           gap: 0.75rem;
+           padding: 1rem;
+       }
+
+       .modal-content {
+           width: 85%;
+           margin: 20% auto;
+           padding: 1.5rem;
+       }
+
+       .grid-layout {
+           grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+           gap: 1rem;
+       }
+   }
+
+   /* Phone Breakpoint (Screens under 480px wide) */
+   @media screen and (max-width: 480px) {
+       header {
+           flex-direction: column;
+           text-align: center;
+           gap: 0.5rem;
+           padding: 1rem;
+       }
+
+       /* Convert standard HTML tables safely into stacking cards */
+       table, thead, tbody, th, td, tr {
+           display: block;
+           width: 100%;
+       }
+
+       thead {
+           display: none; /* Hide original headers on smartphone views */
+       }
+
+       tr {
+           margin-bottom: 1.25rem;
+           border: 1px solid #e0e0e0;
+           border-radius: 8px;
+           background: #ffffff;
+           box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+           padding: 0.5rem 0;
+       }
+
+       td {
+           text-align: right;
+           padding: 0.5rem 1rem !important;
+           padding-left: 50% !important;
+           position: relative;
+           border-bottom: 1px solid #f1f1f1;
+       }
+
+       /* Inject description titles smoothly into cells using data attributes */
+       td::before {
+           content: attr(data-label);
+           position: absolute;
+           left: 1rem;
+           top: 50%;
+           transform: translateY(-50%);
+           width: 40%;
+           text-align: left;
+           font-weight: bold;
+           color: #495057;
+       }
+
+       td:last-child {
+           border-bottom: none;
+           text-align: center;
+           padding-left: 1rem !important;
+           background-color: #fafafa;
+           margin-top: 0.5rem;
+           padding-top: 1rem !important;
+       }
+   }
+

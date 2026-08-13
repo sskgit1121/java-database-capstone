@@ -99,3 +99,97 @@ This file defines the Doctor Dashboard interface, allowing doctors to view and m
 
     * Properly close the `<body>` and `<html>` tags to complete the document.
  -->
+ <!-- doctorDashboard.html -->
+ <!DOCTYPE html>
+ <html lang="en" xmlns:th="http://thymeleaf.org">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>DoctorDashboard</title>
+     
+     <!-- Favicon link -->
+     <link rel="icon" th:href="@{/assets/images/favicon.ico}" type="image/x-icon">
+
+     <!-- Stylesheets integration -->
+     <link rel="stylesheet" th:href="@{/assets/css/adminDashboard.css}">
+     <link rel="stylesheet" th:href="@{/assets/css/doctorDashboard.css}">
+     <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+
+     <!-- Utility & Helper Scripts -->
+     <script th:src="@{/js/render.js}" defer></script>
+     <script th:src="@{/js/util.js}" defer></script>
+
+     <!-- UI Component Layout Scripts -->
+     <script th:src="@{/js/components/header.js}" defer></script>
+     <script th:src="@{/js/components/footer.js}" defer></script>
+     <script th:src="@{/js/components/patientRows.js}" defer></script>
+
+     <!-- Services Core Logical Pipeline Scripts -->
+     <script th:src="@{/js/services/patientServices.js}" defer></script>
+     <script th:src="@{/js/services/doctorDashboard.js}" defer></script>
+ </head>
+ <body>
+
+     <div class="container">
+         <div class="wrapper">
+             
+             <!-- Dynamic Inject Anchor Target Node for Layout Header Component -->
+             <div id="header"></div>
+
+             <!-- Main Interactive Workspace Area -->
+             <main class="main-content">
+                 
+                 <!-- Core Search and Filtering Utilities Bar -->
+                 <section class="search-filter-container">
+                     <div class="search-box">
+                         <input type="text" id="searchBar" placeholder="Search patient by name or phone..." />
+                     </div>
+                     
+                     <div class="filter-actions">
+                         <button id="todayAppointmentsBtn" class="filter-btn active">Today's Appointments</button>
+                         <div class="date-picker-group">
+                             <label for="appointmentDate">Select Date:</label>
+                             <input type="date" id="appointmentDate" class="date-input" />
+                         </div>
+                     </div>
+                 </section>
+
+                 <!-- Patient Records Data Table Section -->
+                 <section class="table-responsive-container">
+                     <table id="patientTable">
+                         <thead>
+                             <tr>
+                                 <th>Patient ID</th>
+                                 <th>Name</th>
+                                 <th>Phone</th>
+                                 <th>Email</th>
+                                 <th>Prescription Actions</th>
+                             </tr>
+                         </thead>
+                         <tbody id="patientTableBody">
+                             <!-- Dynamic Row Data is appended here via template engine or patientRows.js -->
+                             <!-- Example state if no records are found initially:
+                             <tr>
+                                 <td colspan="5" class="noPatientRecord">No patient records found for the selected date filters.</td>
+                             </tr>
+                             -->
+                         </tbody>
+                     </table>
+                 </section>
+
+             </main>
+
+             <!-- Dynamic Inject Anchor Target Node for Layout Footer Component -->
+             <div id="footer"></div>
+
+         </div>
+     </div>
+
+     <!-- Hidden Activation Framework Modal Popup Layout Component -->
+     <div id="modal" class="modal">
+         <span id="closeModal" class="close">&times;</span>
+         <div id="modal-body"></div>
+     </div>
+
+ </body>
+ </html>

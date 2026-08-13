@@ -102,3 +102,59 @@ and triggers modal-based login functionality.
     * Properly close all opened tags to complete the document structure.
 
  -->
+ 
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Clinic Management System - Select Role</title>
+     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22 width=%22100%22 height=%22100%22><text y=%220.9em%22 font-size=%2290%22>🏥</text></svg>">
+     
+     <!-- Link your external CSS files here -->
+     <link rel="stylesheet" href="./assets/css/index.css">
+     <link rel="stylesheet" href="./assets/css/style.css">
+
+     <!-- Defer utility scripts -->
+     <script src="./js/util.js" defer></script>
+     <script src="./js/render.js" defer></script>
+     <script src="./js/components/header.js" defer></script>
+     <script src="./js/components/footer.js" defer></script>
+ </head>
+ <body>
+     <div class="container">
+         <div class="wrapper">
+             <div id="header"></div>
+             <main class="main-content">
+                 <h2>Select Your Role</h2>
+                 <div class="role-button-group">
+                     <button class="dashboard-btn" id="role-admin" onclick="selectRole('Admin')">
+                         <span class="icon">🛡️</span>
+                         <span>Admin</span>
+                     </button>
+                     <button class="dashboard-btn" id="role-doctor" onclick="selectRole('Doctor')">
+                         <span class="icon">🩺</span>
+                         <span>Doctor</span>
+                     </button>
+                     <button class="dashboard-btn" id="role-patient" onclick="selectRole('Patient')">
+                         <span class="icon">👤</span>
+                         <span>Patient</span>
+                     </button>
+                 </div>
+             </main>
+             <div id="footer"></div>
+         </div>
+     </div>
+
+     <div id="modal" class="modal">
+         <div class="modal-content">
+             <span id="closeModal" class="close">&times;</span>
+             <div id="modal-body"></div>
+         </div>
+     </div>
+
+     <!-- Link your external services module here -->
+     <script type="module" src="../js/services/index.js" defer></script>
+ </body>
+ </html>
+

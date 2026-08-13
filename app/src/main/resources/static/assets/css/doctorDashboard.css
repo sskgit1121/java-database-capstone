@@ -63,3 +63,243 @@
 
 Let me know if you'd like a consolidated style guide for the entire HospitalCRM frontend.
  */
+ 
+ /* ==========================================================================
+    RESET & BASE STYLES
+    ========================================================================== */
+ * {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+ }
+
+ html, body {
+     height: 100%;
+     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+     color: #1e293b;
+     background-color: #f1f5f9;
+ }
+
+ /* ==========================================================================
+    LAYOUT CONTAINERS
+    ========================================================================== */
+ .wrapper {
+     display: flex;
+     flex-direction: column;
+     min-height: 100vh;
+     width: 100%;
+ }
+
+ .main-content {
+     flex: 1;
+     padding: 2rem;
+     max-width: 1300px;
+     width: 100%;
+     margin: 0 auto;
+     display: flex;
+     flex-direction: column;
+     gap: 1.5rem;
+ }
+
+ /* ==========================================================================
+    SEARCH & FILTER STYLING
+    ========================================================================== */
+ .search-filter-container {
+     background-color: #ffffff;
+     border-radius: 10px;
+     padding: 1.25rem 1.5rem;
+     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     flex-wrap: wrap;
+     gap: 1.25rem;
+ }
+
+ .search-box {
+     flex: 1;
+     min-width: 280px;
+ }
+
+ #searchBar {
+     width: 100%;
+     padding: 0.65rem 1rem;
+     font-size: 0.95rem;
+     border: 1px solid #cbd5e1;
+     border-radius: 6px;
+     outline: none;
+     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+ }
+
+ #searchBar:focus {
+     border-color: #015c5d;
+     box-shadow: 0 0 0 3px rgba(1, 92, 93, 0.15);
+ }
+
+ .filter-actions {
+     display: flex;
+     align-items: center;
+     gap: 1.5rem;
+     flex-wrap: wrap;
+ }
+
+ .filter-btn {
+     background-color: #015c5d;
+     color: #ffffff;
+     border: none;
+     padding: 0.65rem 1.25rem;
+     font-size: 0.9rem;
+     font-weight: 600;
+     border-radius: 6px;
+     cursor: pointer;
+     transition: background-color 0.2s ease;
+ }
+
+ .filter-btn:hover {
+     background-color: #017d7e;
+ }
+
+ .date-picker-group {
+     display: flex;
+     align-items: center;
+     gap: 0.5rem;
+ }
+
+ .date-picker-group label {
+     font-size: 0.875rem;
+     font-weight: 600;
+     color: #475569;
+ }
+
+ .date-input {
+     padding: 0.55rem 0.75rem;
+     font-size: 0.9rem;
+     border: 1px solid #cbd5e1;
+     border-radius: 6px;
+     outline: none;
+     color: #334155;
+     font-family: inherit;
+     cursor: pointer;
+ }
+
+ .date-input:focus {
+     border-color: #015c5d;
+ }
+
+ /* ==========================================================================
+    PATIENT TABLE STYLING
+    ========================================================================== */
+ .table-responsive-container {
+     background-color: #ffffff;
+     border-radius: 10px;
+     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+     overflow-x: auto;
+     border: 1px solid #e2e8f0;
+ }
+
+ #patientTable {
+     width: 100%;
+     border-collapse: collapse;
+     text-align: left;
+     min-width: 700px;
+ }
+
+ #patientTable thead {
+     background-color: rgba(15, 23, 42, 0.85);
+     color: #ffffff;
+ }
+
+ #patientTable th {
+     padding: 1rem 1.25rem;
+     font-size: 0.9rem;
+     font-weight: 600;
+     letter-spacing: 0.02em;
+     text-transform: uppercase;
+ }
+
+ #patientTable tbody tr {
+     border-bottom: 1px solid #e2e8f0;
+     transition: background-color 0.15s ease;
+ }
+
+ /* Alternating row configurations */
+ #patientTable tbody tr:nth-child(even) {
+     background-color: #f8fafc;
+ }
+
+ #patientTable tbody tr:hover {
+     background-color: #f1f5f9;
+ }
+
+ #patientTable td {
+     padding: 1rem 1.25rem;
+     font-size: 0.95rem;
+     color: #334155;
+     vertical-align: middle;
+ }
+
+ /* ==========================================================================
+    EXTRAS & COMPONENT STATES
+    ========================================================================== */
+ .prescription-btn {
+     background-color: #0ea5e9;
+     color: #ffffff;
+     border: none;
+     padding: 0.5rem 1rem;
+     font-size: 0.85rem;
+     font-weight: 600;
+     border-radius: 4px;
+     cursor: pointer;
+     display: inline-flex;
+     align-items: center;
+     gap: 0.35rem;
+     transition: transform 0.2s ease, filter 0.2s ease;
+ }
+
+ .prescription-btn:hover {
+     transform: scale(1.04);
+     filter: brightness(1.1);
+ }
+
+ .noPatientRecord {
+     text-align: center;
+     font-style: italic;
+     color: #64748b;
+     padding: 3rem !important;
+     background-color: #ffffff;
+ }
+
+ /* ==========================================================================
+    RESPONSIVE DESIGN Breakdowns
+    ========================================================================== */
+ @media (max-width: 768px) {
+     .search-filter-container {
+         flex-direction: column;
+         align-items: stretch;
+         padding: 1rem;
+     }
+
+     .filter-actions {
+         flex-direction: column;
+         align-items: stretch;
+         gap: 1rem;
+     }
+
+     .filter-btn, .date-picker-group {
+         width: 100%;
+     }
+
+     .date-input {
+         flex: 1;
+     }
+
+     .main-content {
+         padding: 1rem;
+         gap: 1rem;
+     }
+
+     #patientTable th, #patientTable td {
+         padding: 0.75rem 1rem;
+         font-size: 0.875rem;
+     }
+ }
