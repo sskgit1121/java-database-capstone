@@ -14,8 +14,9 @@ Notes:
 [Additional information or edge cases]
 
 ++++++++++++++
-System User StoriesAdmin User StoriesStory 
-A1: Secure Admin Login
+System User Stories
+## Admin User Stories
+Story A1: Secure Admin Login
 Title:As an Admin, I want to log into the portal with my username and password, so that I can manage the platform securely.
 
 Acceptance Criteria:System validates credentials against secure storage databases.Unsuccessful login attempts display a generic error notice and lock the account temporarily after 5 failures.Successful login routes the user straight to the administrative dashboard layout.
@@ -58,7 +59,7 @@ Notes:
 Appropriate relational indexing needs to be applied to the appointments database keys to optimize report retrieval speeds.
 
 +++++++++++++
-Patient User Stories
+##Patient User Stories
 Story P1: Unauthenticated Doctor Exploration
 Title:As a Patient, I want to view a list of doctors without logging in, so that I can explore options before registering.
 Acceptance Criteria:Public visitors can open a listing registry page displaying active practitioners.The platform displays names, medical specializations, and office zip codes openly.Attempting to click a 'Book Session' prompt routes the visitor to a mandatory registration or authentication wall interface.
@@ -104,7 +105,7 @@ Story Points: 3
 Notes:
 Historical appointment items tracking completed visits are hidden from this card component and stored under history indices.
 ++++++++++++++++++++++
-Doctor User Stories
+##Doctor User Stories
 Story D1: Secure Doctor LoginTitle:As a Doctor, I want to log into the portal, so that I can manage my appointments securely.
 Acceptance Criteria:Doctor can enter registered email credentials and a password to authenticate access.Failed authentication requests trigger brief account freezes after 5 broken attempts to protect credentials.Successful validation moves the portal view instantly to the doctor's localized dashboard space.
 Priority: High
