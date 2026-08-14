@@ -1,0 +1,33 @@
+# Name of the backend linting pipeline visible in your GitHub UI
+name: Lint Java Backend
+
+# Configures the workflow to run automatically on every push or pull request event
+on: [push, pull_request]
+
+jobs:
+  # Unique structural ID for the job execution tree
+  lint-java:
+    # Provisions the latest cloud-hosted Ubuntu virtual machine environment
+    runs-on: ubuntu-latest
+    # Display name shown on your development branch pipeline status tree
+    name: Checkstyle Java Linting
+    steps:
+      # Step 1: Clone your repository onto the remote runner workspace
+      - uses: actions/checkout@v3
+
+      # Step 2: Initialize and configure the OpenJDK 17 environment
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'  # Selects the open-source Eclipse Temurin binaries
+          java-version: '17'       # Matches the core target platform compiler standard
+
+      # Step 3: Fetch the standalone execution file for Checkstyle using curl
+      - name: Download Checkstyle
+        run: curl -L -o checkstyle.jar https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.12.1/checkstyle-10.12.1-all.jar
+
+      # Step 4: Run analysis against the targeted backend source package folder layout
+      # The '|| true' operator catches non-zero exit codes to prevent warnings from halting the pipeline
+      - name: Run Checkstyle
+        run: |
+          java -jar checkstyle.jar -c /google_checks.xml app/src/main/java/com/project/back_end || true
