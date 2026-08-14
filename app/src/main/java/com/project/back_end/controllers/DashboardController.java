@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.Map;
 
 // Mock import path for your validation service layer
@@ -33,18 +35,20 @@ public class DashboardController {
      * Extracts token path variable and checks access permissions.
      */
     @GetMapping("/adminDashboard/{token}")
-    public String adminDashboard(@PathVariable("token") String token) {
-        // Call validation service specifically requesting admin structural checks
+    public String adminDashboard(@PathVariable("token") String token, RedirectAttributes redirectAttrs) {
         Map<String, Object> validationResult = tokenService.validateToken(token, "admin");
 
-        // An empty errors map signifies a clean signature validation phase
         if (validationResult.isEmpty()) {
-            return "admin/adminDashboard"; // Resolves to templates/admin/adminDashboard.html
+            return "admin/adminDashboard";
         }
 
-        // Secure Fallback: Force redirect back to base portal landing node
+        // Capture the descriptive failure and pass it back to the landing view context
+        String failureReason = validationResult.getOrDefault("error", "Invalid Session.").toString();
+        redirectAttrs.addFlashAttribute("errorMessage", failureReason);
+
         return "redirect:http://localhost:8080";
     }
+
 
     /**
      * Secure endpoint mapping for the Doctor Dashboard view layer.

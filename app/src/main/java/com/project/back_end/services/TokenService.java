@@ -1,6 +1,21 @@
 package com.project.back_end.services;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service; 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+
+@Service
 public class TokenService {
+	
+	 // Spring injects the property value directly into this variable string
+    @Value("${jwt.secret}")
+    private String secretKey;
 // 1. **@Component Annotation**
 // The @Component annotation marks this class as a Spring component, meaning Spring will manage it as a bean within its application context.
 // This allows the class to be injected into other Spring-managed components (like services or controllers) where it's needed.
@@ -38,6 +53,38 @@ public class TokenService {
 // - If the role or user does not exist, it returns false, indicating the token is invalid.
 // - The method gracefully handles any errors by returning false if the token is invalid or an exception occurs.
 // This ensures secure access control based on the user's role and their existence in the system.
+	// Conceptual preview of the future validation enhancement loop
+	public Map<String, Object> validateToken(String token, String expectedRole) {
+	    Map<String, Object> errors = new HashMap<>();
+	    try {
+	        // 1. Decode token using backend cryptographic secret keys
+	    	// Requires: import io.jsonwebtoken.Jwts;
+	    	// Requires: import io.jsonwebtoken.Claims;
+
+	    	Claims claims = Jwts.parser()
+	    	                    .verifyWith(io.jsonwebtoken.security.Keys.hmacShaKeyFor(secretKey.getBytes()))
+	    	                    .build()
+	    	                    .parseSignedClaims(token)
+	    	                    .getPayload();
+
+	        
+	        // 2. Check Expiration timestamp bounds
+	        if (claims.getExpiration().before(new Date())) {
+	            errors.put("auth_error", "Session has expired.");
+	            return errors;
+	        }
+	        
+	        // 3. Verify target role authorization match
+	        String tokenRole = claims.get("role", String.class);
+	        if (!expectedRole.equalsIgnoreCase(tokenRole)) {
+	            errors.put("role_error", "Insufficient structural clearance.");
+	        }
+	        
+	    } catch (JwtException | IllegalArgumentException e) {
+	        errors.put("signature_error", "Malformed or tampered token.");
+	    }
+	    return errors;
+	}
 
 
 }
