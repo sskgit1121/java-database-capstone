@@ -102,3 +102,63 @@
   Call the renderFooter function to populate the footer in the page
 
 */
+/**
+ * Footer.js
+ * Reusable component managing the global layout footer frame.
+ * Inserts consistent branding, organizational structure columns, and legal information
+ * statically across all system viewports without role differentiation.
+ */
+
+/**
+ * Locates the target footer container placeholder and injects the standardized HTML layout template.
+ */
+function renderFooter() {
+    const footer = document.getElementById("footer");
+    
+    // Safety guardrail to prevent runtime execution errors if the container element is absent
+    if (!footer) {
+        console.error("Target node container framework placeholder (#footer) was not located inside the current page DOM context.");
+        return;
+    }
+
+    // Assigning the regular structured HTML tags wrapped inside the top-level container template string
+    footer.innerHTML = `
+        <footer class="footer" style="background-color: #0f172a; color: #94a3b8; padding: 3rem 2rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+            <div class="footer-container" style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
+                
+                <!-- Company Link Column -->
+                <div class="footer-column" style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 150px;">
+                    <h4 style="color: #ffffff; font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem;">Company</h4>
+                    <a href="#" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">About</a>
+                    <a href="#" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">Careers</a>
+                    <a href="#" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">Press</a>
+                </div>
+
+                <!-- Support Link Column -->
+                <div class="footer-column" style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 150px;">
+                    <h4 style="color: #ffffff; font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem;">Support</h4>
+                    <a href="#" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">Account</a>
+                    <a href="#" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">Help Center</a>
+                    <a href="#" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">Contact</a>
+                </div>
+
+                <!-- Legals Link Column -->
+                <div class="footer-column" style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 150px;">
+                    <h4 style="color: #ffffff; font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem;">Legals</h4>
+                    <a href="#" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">Terms</a>
+                    <a href="#" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">Privacy Policy</a>
+                    <a href="#" style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">Licensing</a>
+                </div>
+
+            </div>
+
+            <!-- Branding and Legal Copyright Subsection Boundary Line -->
+            <div class="footer-branding" style="max-width: 1200px; margin: 2rem auto 0 auto; padding-top: 1.5rem; border-top: 1px solid #1e293b; text-align: center; font-size: 0.875rem;">
+                <p>&copy; 2026 CarePulse Health Systems. All rights reserved.</p>
+            </div>
+        </footer>
+    `;
+}
+
+// Automatically invoke function execution loop on script file payload loading instance
+renderFooter();

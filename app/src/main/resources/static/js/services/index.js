@@ -56,3 +56,136 @@
     - Log the error to the console
     - Show a generic error message
 */
+
+/**
+ * Service Layer for Role-Based Authentication & Token Management
+ */
+/**
+ * Role-Based Login Handling Service
+ * File: app/src/main/resources/static/js/services/index.js
+ */
+
+// Import Required Modules
+import { openModal } from '../components/modals.js';
+import { API_BASE_URL } from '../config/config.js';
+
+// Define endpoints using the base URL
+const ADMIN_API = API_BASE_URL + '/admin';
+const DOCTOR_API = API_BASE_URL + '/doctor/login';
+
+// Setup Button Event Listeners using window.onload
+window.onload = function () {
+    // Select Admin login button by its id attribute
+    const adminBtn = document.getElementById('adminLogin');
+    if (adminBtn) {
+        adminBtn.addEventListener('click', () => {
+            openModal('adminLogin');
+        });
+    }     
+
+    // Select Doctor login button by its id attribute
+    const doctorBtn = document.getElementById('doctorLogin');
+    if (doctorBtn) {
+        doctorBtn.addEventListener('click', () => {
+            openModal('doctorLogin');
+        });
+    }
+};
+
+/**
+ * Implement Admin Login Handler
+ * Asynchronous function defined on the global window object to make it accessible anywhere.
+ */
+window.adminLoginHandler = async function () {
+    try {
+        // Read the values entered for username and password
+        const username = document.getElementById('adminUsername').value;
+        const password = document.getElementById('adminPassword').value;
+
+        // Create an admin object containing these credentials
+        const admin = { username, password };
+
+        // Use fetch() to make a POST request to the Admin login API
+        const response = await fetch(ADMIN_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(admin)
+        });
+
+        // After receiving the response: Check if successful
+        if (response.ok) {
+            // Extract the response JSON
+            const data = await response.json();
+            
+            // Store the received token in localStorage
+            localStorage.setItem('token', data.token);
+            
+            // Call the helper function selectRole() from render.js to save the selected role
+            if (typeof selectRole === 'function') {
+                selectRole('admin');
+            } else if (typeof window.selectRole === 'function') {
+                window.selectRole('admin');
+            } else {
+                // Fallback option if selectRole is not found globally
+                localStorage.setItem('role', 'admin');
+                window.location.href = '/admin/dashboard';
+            }
+        } else {
+            // If it fails, display an alert
+            alert('Invalid credentials!');
+        }
+    } catch (error) {
+        // Wrap the request in a try-catch block to catch and alert any unexpected errors
+        console.error('Admin Login Error:', error);
+        alert('An unexpected error occurred during admin login.');
+    }
+};
+
+/**
+ * Implement Doctor Login Handler
+ * Asynchronous function defined on the global window object to make it accessible anywhere.
+ */
+window.doctorLoginHandler = async function () {
+    try {
+        // Read the email and password values entered by the user
+        const email = document.getElementById('doctorEmail').value;
+        const password = document.getElementById('doctorPassword').value;
+
+        // Create a doctor object with these values
+        const doctor = { email, password };
+
+        // Send a POST request to the Doctor login endpoint using fetch()
+        const response = await fetch(DOCTOR_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(doctor)
+        });
+
+        // After receiving the response: Check if successful
+        if (response.ok) {
+            // Extract the response JSON
+            const data = await response.json();
+
+            // Store the received token in localStorage
+            localStorage.setItem('token', data.token);
+
+            // Call the helper function selectRole() with "doctor" to save the selected role
+            if (typeof selectRole === 'function') {
+                selectRole('doctor');
+            } else if (typeof window.selectRole === 'function') {
+                window.selectRole('doctor');
+            } else {
+                // Fallback option if selectRole is not found globally
+                localStorage.setItem('role', 'doctor');
+                window.location.href = '/doctor/dashboard';
+            }
+        } else {
+            // If it fails, alert the user about invalid credentials
+            alert('Invalid credentials!');
+        }
+    } catch (error) {
+        // Handle unexpected issues using try-catch
+        console.error('Doctor Login Error:', error);
+        alert('An unexpected error occurred during doctor login.');
+    }
+};
