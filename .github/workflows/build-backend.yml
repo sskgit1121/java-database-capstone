@@ -17,5 +17,8 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
+      # FIX: Added the multi-line pipe block to move into your app folder before compilation
       - name: Compile Backend with Maven
-        run: mvn clean compile
+        run: |
+          cd app
+          mvn clean compile
