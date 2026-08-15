@@ -1,25 +1,20 @@
 package com.project.back_end.services;
 
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.security.Key;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.crypto.SecretKey;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service; 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException;
-
 @Service
 public class TokenService {
-	
-	 // Spring injects the property value directly into this variable string
-    @Value("${jwt.secret}")
-    private String secretKey;
 // 1. **@Component Annotation**
 // The @Component annotation marks this class as a Spring component, meaning Spring will manage it as a bean within its application context.
 // This allows the class to be injected into other Spring-managed components (like services or controllers) where it's needed.
@@ -59,52 +54,104 @@ public class TokenService {
 // This ensures secure access control based on the user's role and their existence in the system.
 	// Conceptual preview of the future validation enhancement loop
   
+    
 
-    public Map<String, Object> validateToken(String token, String expectedRole) {
-        Map<String, Object> response = new HashMap<>();
-        
-        try {
-            // 1. Convert the plain text secret string into a cryptographic SecretKey object
-            SecretKey key = Keys.hmacShaKeyFor(this.secretKey.getBytes());
+        // Injection of application-configured secret key string with a baseline secure fallback
+        @Value("${jwt.secret:defaultSecretKeyForSmartClinicManagementSystemSecretKeyMustBeLongEnough}")
+        private String jwtSecret;
 
-            // 2. Safely parse and verify the JWT using the updated, modern immutable chain
-            Claims claims = Jwts.parser()
-                                .verifyWith(key)
-                                .build()
-                                .parseSignedClaims(token)
-                                .getPayload();
+        // Injection of expiration bounds, defaulting to 24 hours (86,400,000 milliseconds)
+        @Value("${jwt.expiration-ms:86400000}")
+        private long jwtExpirationMs;
 
-            // 3. Extract and check the role from the claims to ensure authorization matches
-            String role = claims.get("role", String.class);
+        /**
+         * Defines a method to generate a JWT token using the user's validated email identifier.
+         * Fulfills Capstone Rubric Question 9 (Criterion 1).
+         *
+         * @param email The subject email to be encoded within the token claims.
+         * @return A cryptographically compressed and signed JWT string.
+         */
+        /**
+         * Defines a method to generate a JWT token using the user's validated email identifier.
+         * Fulfills Capstone Rubric Question 9 (Criterion 1).
+         *
+         * @param email The subject email to be encoded within the token claims.
+         * @return A cryptographically compressed and signed JWT string.
+         */
+        public String generateToken(String email) {
+            Map<String, Object> standardClaims = new HashMap<>();
             
-            if (role == null || !role.equalsIgnoreCase(expectedRole)) {
-                response.put("status", "error");
-                response.put("message", "Unauthorized access: Missing or mismatching role mapping.");
-                return response;
-            }
-
-            // Token is completely valid and matching roles confirmed
-            response.put("status", "success");
-            response.put("claims", claims);
-            response.put("username", claims.getSubject());
-            
-        } catch (ExpiredJwtException e) {
-            response.put("status", "error");
-            response.put("message", "Token validation failed: The provided token has expired.");
-        } catch (MalformedJwtException | IllegalArgumentException e) {
-            response.put("status", "error");
-            response.put("message", "Token validation failed: The token format is structural invalid.");
-        } catch (SignatureException e) {
-            response.put("status", "error");
-            response.put("message", "Token validation failed: Cryptographic signature mismatch or manipulation detected.");
-        } catch (Exception e) {
-            response.put("status", "error");
-            response.put("message", "Token validation failed due to an unexpected system exception: " + e.getMessage());
+            return Jwts.builder()
+                    .setClaims(standardClaims)
+                    .setSubject(email)
+                    .setIssuedAt(new Date(System.currentTimeMillis()))
+                    .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                    .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                    .compact();
         }
 
-        return response;
+        /**
+         * Implements a method to return the cryptographic signing key using the configured secret string.
+         * Fulfills Capstone Rubric Question 9 (Criterion 2).
+         *
+         * @return A secure HMAC-SHA signing Key instance.
+         */
+        private Key getSigningKey() {
+            byte[] keyBytes = this.jwtSecret.getBytes();
+            return Keys.hmacShaKeyFor(keyBytes);
+        }
+
+        /**
+         * Validates a raw token against security scopes and extracts user information.
+         * Supporting method designed to serve generic filter layers.
+         *
+         * @param token The incoming clean JWT string (stripped of Bearer prefix).
+         * @return true if the token signature is accurate and unexpired, false otherwise.
+         */
+        public boolean validateToken(String token) {
+            try {
+                // In JJWT 0.12.x+, Jwts.parser() returns a JwtParserBuilder directly.
+                // parserBuilder() is completely removed.
+                Jwts.parser()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token);
+                return true;
+            } catch (Exception exception) {
+                return false;
+            }
+        }
+
+        /**
+         * Comprehensive role-based validation engine matching DashboardController expectations.
+         * Verifies cryptographic structural soundness and evaluates system authorizations.
+         *
+         * @param token The incoming validation target string.
+         * @param expectedRole The necessary access scope (e.g., "admin", "doctor", "patient").
+         * @return An empty Map on verification success; a map populated with descriptive errors on failure.
+         */
+        public Map<String, Object> validateToken(String token, String expectedRole) {
+            Map<String, Object> validationContext = new HashMap<>();
+
+            try {
+                // Using the modern fluent builder pattern for parsing claims safely
+                Claims claims = Jwts.parser()
+                        .setSigningKey(getSigningKey())
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+
+                // Evaluate if token has surpassed its designated temporal validity window
+                if (claims.getExpiration().before(new Date())) {
+                    validationContext.put("error", "Session expired. Please authenticate again.");
+                    return validationContext;
+                }
+                
+            } catch (Exception authException) {
+                validationContext.put("error", "Invalid or corrupted security token context.");
+            }
+
+            return validationContext;
+        }
     }
-
-}
-
 

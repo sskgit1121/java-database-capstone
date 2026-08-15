@@ -5,26 +5,22 @@ import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Transient;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Future;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
 
 /**
  * ==========================================
  * 4. APPOINTMENT MODEL (MySQL Relational Entity)
  * ==========================================
+ * Aligned with the official schema design layout including duration controls.
  */
 @Entity
 @Table(name = "appointments")
@@ -44,25 +40,32 @@ public class Appointment {
 
     @Future(message = "Appointment time must be in the future")
     @NotNull(message = "Appointment date/time cannot be null")
+    @Column(name = "appointment_time", nullable = false)
     private LocalDateTime appointmentTime;
 
     @NotNull(message = "Appointment status is required")
-    private int status; // 0 = Scheduled, 1 = Completed
+    @Column(name = "status", nullable = false)
+    private int status; // 0 = Scheduled, 1 = Completed, 2 = Cancelled, 3 = No Show
 
-    // Advanced Enhanced Fields
+    // Added Field to resolve compilation error inside AppointmentService
+    @Column(name = "duration_minutes", nullable = false)
+    private Integer durationMinutes = 30;
+
     @NotNull(message = "Reason for visit is required")
     @Size(min = 3, max = 255, message = "Reason for visit must be between 3 and 255 characters")
+    @Column(name = "reason_for_visit")
     private String reasonForVisit;
 
     // Constructors
     public Appointment() {}
 
-    public Appointment(Doctor doctor, Patient patient, LocalDateTime appointmentTime, int status, String reasonForVisit) {
+    public Appointment(Doctor doctor, Patient patient, LocalDateTime appointmentTime, int status, String reasonForVisit, Integer durationMinutes) {
         this.doctor = doctor;
         this.patient = patient;
         this.appointmentTime = appointmentTime;
         this.status = status;
         this.reasonForVisit = reasonForVisit;
+        this.durationMinutes = durationMinutes;
     }
 
     /**
@@ -123,6 +126,14 @@ public class Appointment {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public Integer getDurationMinutes() {
+        return durationMinutes;
+    }
+
+    public void setDurationMinutes(Integer durationMinutes) {
+        this.durationMinutes = durationMinutes;
     }
 
     public String getReasonForVisit() {

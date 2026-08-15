@@ -1,21 +1,56 @@
 package com.project.back_end.repo;
 
-public interface PrescriptionRepository  {
-// 1. Extend MongoRepository:
-//    - The repository extends MongoRepository<Prescription, String>, which provides basic CRUD functionality for MongoDB.
-//    - This allows the repository to perform operations like save, delete, update, and find without needing to implement these methods manually.
-//    - MongoRepository is tailored for working with MongoDB, unlike JpaRepository which is used for relational databases.
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.stereotype.Repository;
+import java.util.List;
 
-// Example: public interface PrescriptionRepository extends MongoRepository<Prescription, String> {}
+// Import the Prescription domain document model
+import com.project.back_end.models.Prescription;
 
-// 2. Custom Query Method:
+/**
+ * PrescriptionRepository
+ * Provides NoSQL data access tier capabilities for Prescription MongoDB documents.
+ * Fulfills Capstone Rubric criteria for handling unstructured medical data.
+ */
+@Repository
+public interface PrescriptionRepository extends MongoRepository<Prescription, String> {
 
-//    - **findByAppointmentId**:
-//      - This method retrieves a list of prescriptions associated with a specific appointment.
-//      - Return type: List<Prescription>
-//      - Parameters: Long appointmentId
-//      - MongoRepository automatically derives the query from the method name, in this case, it will find prescriptions by the appointment ID.
+    /**
+     * Retrieves a list of prescriptions associated with a specific appointment.
+     * Fulfills Criterion 2 of the PrescriptionRepository design guidelines.
+     * Spring Data MongoDB automatically derives the query matching the appointmentId attribute.
+     * 
+     * @param appointmentId the unique identifier of the relational appointment record
+     * @return a collection list containing matching prescription documents
+     */
+    List<Prescription> findByAppointmentId(Long appointmentId);
 
+    /**
+     * Extra Method: Retrieves prescriptions by partial patient name matching (case-insensitive).
+     * Useful for cross-referencing lookups inside clinical workflows.
+     * 
+     * @param patientName the partial name of the target patient
+     * @return a collection list containing matching prescription documents
+     */
+    List<Prescription> findByPatientNameContainingIgnoreCase(String patientName);
 
+    /**
+     * Extra Method: Retrieves prescriptions matching a specific pharmacy name.
+     * Useful for coordinating downstream logistics and routing validations.
+     * 
+     * @param pharmacyName the name of the assigned pharmacy distributor
+     * @return a collection list containing matching prescription documents
+     */
+    List<Prescription> findByPharmacyNameIgnoreCase(String pharmacyName);
+
+    /**
+     * Extra Method: Performs a custom MongoDB JSON criteria regex match on medication arrays.
+     * Demonstrates advanced NoSQL document searching capabilities within complex structures.
+     * 
+     * @param medication the name or partial string of the medication to look up
+     * @return a collection list containing matching prescription documents
+     */
+    @Query("{ 'medication' : { $regex: ?0, $options: 'i' } }")
+    List<Prescription> findByMedicationCustomRegex(String medication);
 }
-

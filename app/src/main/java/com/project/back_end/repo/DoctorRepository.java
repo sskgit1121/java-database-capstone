@@ -1,6 +1,17 @@
 package com.project.back_end.repo;
 
-public interface DoctorRepository {
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+
+// Importing the core Doctor domain entity model
+import com.project.back_end.models.Doctor;
+
+@Repository
+public interface DoctorRepository extends JpaRepository<Doctor, Long> {
    // 1. Extend JpaRepository:
 //    - The repository extends JpaRepository<Doctor, Long>, which gives it basic CRUD functionality.
 //    - This allows the repository to perform operations like save, delete, update, and find without needing to implement these methods manually.
@@ -36,4 +47,49 @@ public interface DoctorRepository {
 //    - The @Repository annotation marks this interface as a Spring Data JPA repository.
 //    - Spring Data JPA automatically implements this repository, providing the necessary CRUD functionality and custom queries defined in the interface.
 
-}
+	
+
+	/**
+	 * DoctorRepository
+	 * Marks this interface as a Spring Data JPA repository to provide basic CRUD 
+	 * functionality alongside custom query methods for advanced lookups.
+	 */
+	
+
+	    /**
+	     * Retrieves a Doctor by their unique email address.
+	     * 
+	     * @param email The target email address string.
+	     * @return The matching Doctor entity.
+	     */
+	    Doctor findByEmail(String email);
+
+	    /**
+	     * Retrieves a list of Doctors whose name contains the provided search string (case-sensitive).
+	     * Uses CONCAT('%', :name, '%') to construct the pattern match parameter safely.
+	     * 
+	     * @param name The substring pattern to query against doctor names.
+	     * @return A list of matching Doctor entities.
+	     */
+	    @Query("SELECT d FROM Doctor d WHERE d.name LIKE CONCAT('%', :name, '%')")
+	    List<Doctor> findByNameLike(@Param("name") String name);
+
+	    /**
+	     * Retrieves a list of Doctors where the name contains the search string (case-insensitive)
+	     * and the specialty matches exactly (case-insensitive).
+	     * 
+	     * @param name The partial case-insensitive name token.
+	     * @param specialty The exact case-insensitive medical specialty token.
+	     * @return A list of filtered Doctor records.
+	     */
+	    List<Doctor> findByNameContainingIgnoreCaseAndSpecialtyIgnoreCase(String name, String specialty);
+
+	    /**
+	     * Retrieves a list of Doctors with the specified specialty, ignoring case sensitivity.
+	     * 
+	     * @param specialty The target medical branch/specialty string.
+	     * @return A list of matching Doctor entities.
+	     */
+	    List<Doctor> findBySpecialtyIgnoreCase(String specialty);
+	}
+
