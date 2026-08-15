@@ -1,14 +1,18 @@
 package com.project.back_end.services;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service; 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 
 @Service
 public class TokenService {
@@ -54,37 +58,53 @@ public class TokenService {
 // - The method gracefully handles any errors by returning false if the token is invalid or an exception occurs.
 // This ensures secure access control based on the user's role and their existence in the system.
 	// Conceptual preview of the future validation enhancement loop
-	public Map<String, Object> validateToken(String token, String expectedRole) {
-	    Map<String, Object> errors = new HashMap<>();
-	    try {
-	        // 1. Decode token using backend cryptographic secret keys
-	    	// Requires: import io.jsonwebtoken.Jwts;
-	    	// Requires: import io.jsonwebtoken.Claims;
+  
 
-	    	Claims claims = Jwts.parser()
-	    	                    .verifyWith(io.jsonwebtoken.security.Keys.hmacShaKeyFor(secretKey.getBytes()))
-	    	                    .build()
-	    	                    .parseSignedClaims(token)
-	    	                    .getPayload();
+    public Map<String, Object> validateToken(String token, String expectedRole) {
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            // 1. Convert the plain text secret string into a cryptographic SecretKey object
+            SecretKey key = Keys.hmacShaKeyFor(this.secretKey.getBytes());
 
-	        
-	        // 2. Check Expiration timestamp bounds
-	        if (claims.getExpiration().before(new Date())) {
-	            errors.put("auth_error", "Session has expired.");
-	            return errors;
-	        }
-	        
-	        // 3. Verify target role authorization match
-	        String tokenRole = claims.get("role", String.class);
-	        if (!expectedRole.equalsIgnoreCase(tokenRole)) {
-	            errors.put("role_error", "Insufficient structural clearance.");
-	        }
-	        
-	    } catch (JwtException | IllegalArgumentException e) {
-	        errors.put("signature_error", "Malformed or tampered token.");
-	    }
-	    return errors;
-	}
+            // 2. Safely parse and verify the JWT using the updated, modern immutable chain
+            Claims claims = Jwts.parser()
+                                .verifyWith(key)
+                                .build()
+                                .parseSignedClaims(token)
+                                .getPayload();
 
+            // 3. Extract and check the role from the claims to ensure authorization matches
+            String role = claims.get("role", String.class);
+            
+            if (role == null || !role.equalsIgnoreCase(expectedRole)) {
+                response.put("status", "error");
+                response.put("message", "Unauthorized access: Missing or mismatching role mapping.");
+                return response;
+            }
+
+            // Token is completely valid and matching roles confirmed
+            response.put("status", "success");
+            response.put("claims", claims);
+            response.put("username", claims.getSubject());
+            
+        } catch (ExpiredJwtException e) {
+            response.put("status", "error");
+            response.put("message", "Token validation failed: The provided token has expired.");
+        } catch (MalformedJwtException | IllegalArgumentException e) {
+            response.put("status", "error");
+            response.put("message", "Token validation failed: The token format is structural invalid.");
+        } catch (SignatureException e) {
+            response.put("status", "error");
+            response.put("message", "Token validation failed: Cryptographic signature mismatch or manipulation detected.");
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", "Token validation failed due to an unexpected system exception: " + e.getMessage());
+        }
+
+        return response;
+    }
 
 }
+
+
