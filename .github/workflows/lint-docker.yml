@@ -1,26 +1,19 @@
-# Administrative label visible within your GitHub Actions pipeline overview
 name: Lint Dockerfiles
 
-# Triggers verification automatically on both push and pull_request events
 on: [push, pull_request]
 
 jobs:
-  # Unique structural identifier for the container checking job
   dockerlint:
-    # Specifies the use of the latest stable cloud-hosted Ubuntu environment
     runs-on: ubuntu-latest
-    # Friendly tracking token displayed across logging dashboards
     name: Lint Dockerfiles
     steps:
-      # Step 1: Clone your code assets down onto the temporary runner filesystem
       - uses: actions/checkout@v3
 
-      # Step 2: Invoke the official Hadolint step using its community marketplace action
       - name: Run hadolint
         uses: hadolint/hadolint-action@v3.1.0
         with:
-          # Targets the exact path layout where your Dockerfile resides inside the subfolder
           dockerfile: ./app/Dockerfile
+
 
 		  
 #You can now use Git to commit and push these files. Once pushed, navigate to your repository on GitHub and select the Actions tab to watch your pipeline execute concurrently!
