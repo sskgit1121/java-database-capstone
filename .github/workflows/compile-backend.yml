@@ -1,0 +1,34 @@
+# =======================================================
+# GITHUB ACTIONS CI PIPELINE FOR JAVA BACKEND COMPILATION
+# =======================================================
+
+name: Java Backend Compilation Pipeline
+
+# Automatically triggers the workflow on push or pull request events against main/master branches
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-compile:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the repository source code to the runner environment
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
+
+    # Step 2: Set up Java JDK 17 development runtime environment
+    - name: Configure Java JDK 17 Environment
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: 'maven' # Automatically caches Maven dependencies to speed up subsequent workflow runs
+
+    # Step 3: Compile the project using Maven from within the 'app' subfolder
+    - name: Build and Compile Spring Boot Code
+      working-directory: app # Instructs the runner to execute the command inside your subfolder context
+      run: mvn clean compile
