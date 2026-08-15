@@ -9,10 +9,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run hadolint
-        uses: hadolint/hadolint-action@v3.1.0
-        with:
-          dockerfile: ./app/Dockerfile
+      # Commented out until the file is created in the next lab
+      # - name: Run hadolint
+      #   uses: hadolint/hadolint-action@v3.1.0
+      #   with:
+      #     dockerfile: ./app/Dockerfile
+
 
 
 		  
