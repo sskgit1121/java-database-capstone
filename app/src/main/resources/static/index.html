@@ -1,160 +1,124 @@
-<!-- index.html -->
-<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-Step-by-Step Explanation of `index.html`.
-This file allows users to select a role (Admin, Patient, Doctor) 
-and triggers modal-based login functionality.
+    <title>Clinic Management System - Select Role</title>
 
-1. Label the File
+    <link
+        rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22 width=%22100%22 height=%22100%22><text y=%220.9em%22 font-size=%2290%22>🏥</text></svg>"
+    >
 
-   * Add a comment at the very top to identify the file as `index.html`. This helps developers stay organized.
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="./assets/css/style.css">
 
-2. Declare Document Type
+    <!-- Page-specific CSS -->
+    <link rel="stylesheet" href="./assets/css/index.css">
 
-   * Use the declaration for HTML5 so browsers know how to render the page correctly.
+    <!-- Normal JavaScript files -->
+    <script src="./js/util.js" defer></script>
+    <script src="./js/render.js" defer></script>
 
-3. Start the HTML Document
+    <!-- Reusable components -->
+    <script src="./js/components/header.js" defer></script>
+    <script src="./js/components/footer.js" defer></script>
+</head>
 
-   * Begin the HTML structure and set the document language to English to improve accessibility and SEO `lang="en"`.
+<body>
 
-4. Head Section (Metadata and Resources)
+<div class="container">
 
-   * Open the `<head>` section which contains settings and links that don’t show up visually.
+    <div class="wrapper">
 
-5. Set Character Encoding
+        <!-- Dynamic Header -->
+        <div id="header"></div>
 
-   * Specify UTF-8 encoding to support most global characters and symbols.
+        <!-- Main Content -->
+        <main class="main-content">
 
-6. Set the Page Title
+            <h2>Select Your Role</h2>
 
-   * Give the page a name (e.g., "Select Role") that appears on the browser tab.
+            <div class="role-button-group">
 
-7. Add a Favicon
+                <button
+                    type="button"
+                    class="dashboard-btn"
+                    id="role-admin"
+                >
+                    <span class="icon">🛡️</span>
+                    <span>Admin</span>
+                </button>
 
-   * Link to an icon (like a logo) that will appear in the browser tab from the address `href="../assets/images/logo/Logo.png"`
+                <button
+                    type="button"
+                    class="dashboard-btn"
+                    id="role-doctor"
+                >
+                    <span class="icon">🩺</span>
+                    <span>Doctor</span>
+                </button>
 
-8. Link Stylesheets
+                <button
+                    type="button"
+                    class="dashboard-btn"
+                    id="role-patient"
+                >
+                    <span class="icon">👤</span>
+                    <span>Patient</span>
+                </button>
 
-   * Add a page-specific stylesheet for layout and design.
-   * Also include a global stylesheet for shared site-wide styles.
+            </div>
 
-   HINT:
-      `<link rel="stylesheet" href="../assets/css/index.css">`
-      `<link rel="stylesheet" href="../assets/css/style.css">`
+        </main>
 
-9. Add JavaScript Files with `defer`
+        <!-- Dynamic Footer -->
+        <div id="footer"></div>
 
-   * Link utility and rendering JavaScript files (e.g., `util.js`, `render.js`).
-   * Include scripts for rendering components like header and footer.
-   * Use the `defer` attribute so they load after the HTML is parsed.
+    </div>
 
-   HINT:
-      `<script src="../js/util.js" defer></script>`
-      `<script src="../js/render.js" defer></script>`
-      `<script src="../js/components/header.js" defer></script>`
-      `<script src="../js/components/footer.js" defer></script>`
-      
-10. Close the Head and Open the Body
+</div>
 
-    * Wrap up metadata and begin the visible page content.
 
-11. Create a Container
+<!-- Login / Signup Modal -->
+<div
+    id="modal"
+    class="modal"
+    style="display: none;"
+    aria-hidden="true"
+>
 
-    * Add a main container to hold all page elements and apply layout constraints.
+    <div
+        class="modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+    >
 
-12. Use a Wrapper for Structure
+        <button
+            type="button"
+            id="closeModal"
+            class="close"
+            aria-label="Close modal"
+        >
+            &times;
+        </button>
 
-    * Inside the container, add a wrapper to group header, main, and footer sections logically.
+        <div id="modal-body"></div>
 
-13. Insert a Header Placeholder
+    </div>
 
-    * Add a `div` that will be dynamically filled by JavaScript with the site’s header.
+</div>
 
-14. Define the Main Section
 
-    * Use a semantic `<main>` tag to hold the central content of the page.
+<!--
+    Authentication service must be a module because it uses ES module imports.
+-->
+<script
+    type="module"
+    src="./js/services/index.js"
+></script>
 
-15. Add a Heading for Role Selection
-
-    * Display a heading like “Select Your Role” to instruct users.
-
-16. Add Buttons for Roles
-
-    * Create buttons for each role: Admin, Patient, and Doctor.
-    * Assign unique identifiers or `onclick` handlers to them as needed.
-
-17. Insert a Footer Placeholder
-
-    * Add a `div` that will be dynamically filled by JavaScript with the site’s footer.
-
-18. Create a Modal Structure
-
-    * Add a modal overlay for popups (like login forms).
-    * Include a close button and an inner container for dynamic content.
-
-19. Load Page-Specific Logic Module
-
-    * Use a `<script type="module">` tag to load the role selection logic (e.g., `index.js`).
-    * Ensure it’s deferred so it doesn’t block HTML rendering.
-
-20. Close the Body and HTML Tags
-
-    * Properly close all opened tags to complete the document structure.
-
- -->
- 
- <!DOCTYPE html>
- <html lang="en">
- <head>
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Clinic Management System - Select Role</title>
-     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22 width=%22100%22 height=%22100%22><text y=%220.9em%22 font-size=%2290%22>🏥</text></svg>">
-     
-     <!-- Link your external CSS files here -->
-     <link rel="stylesheet" href="./assets/css/index.css">
-     <link rel="stylesheet" href="./assets/css/style.css">
-
-     <!-- Defer utility scripts -->
-     <script src="./js/util.js" defer></script>
-     <script src="./js/render.js" defer></script>
-     <script src="./js/components/header.js" defer></script>
-     <script src="./js/components/footer.js" defer></script>
- </head>
- <body>
-     <div class="container">
-         <div class="wrapper">
-             <div id="header"></div>
-             <main class="main-content">
-                 <h2>Select Your Role</h2>
-                 <div class="role-button-group">
-                     <button class="dashboard-btn" id="role-admin" onclick="selectRole('Admin')">
-                         <span class="icon">🛡️</span>
-                         <span>Admin</span>
-                     </button>
-                     <button class="dashboard-btn" id="role-doctor" onclick="selectRole('Doctor')">
-                         <span class="icon">🩺</span>
-                         <span>Doctor</span>
-                     </button>
-                     <button class="dashboard-btn" id="role-patient" onclick="selectRole('Patient')">
-                         <span class="icon">👤</span>
-                         <span>Patient</span>
-                     </button>
-                 </div>
-             </main>
-             <div id="footer"></div>
-         </div>
-     </div>
-
-     <div id="modal" class="modal">
-         <div class="modal-content">
-             <span id="closeModal" class="close">&times;</span>
-             <div id="modal-body"></div>
-         </div>
-     </div>
-
-     <!-- Link your external services module here -->
-     <script type="module" src="../js/services/index.js" defer></script>
- </body>
- </html>
-
+</body>
+</html>

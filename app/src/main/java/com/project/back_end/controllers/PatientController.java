@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
+import com.project.back_end.DTO.Login;
 // Internal domain models and service layer components
 import com.project.back_end.models.Patient;
 import com.project.back_end.services.PatientService;
@@ -87,4 +88,26 @@ public class PatientController {
         List<PatientService.AppointmentDTO> appointments = patientService.getPatientAppointment(patientId);
         return ResponseEntity.ok(appointments);
     }
+    
+    /**
+     * Handles HTTP POST requests to authenticate a patient profile.
+     * Aligned with AdminController pattern to use the Model class instead of a loose map wrapper.
+     * 
+     * @param patient the model entity instance holding credential inputs
+     * @return a structured response tracking session token distribution
+     */
+    @PostMapping("/login")
+    public ResponseEntity<?> loginPatient(@RequestBody Login loginDTO) {
+        // Delegates authentication logic to the service layer using entity property getters
+        Map<String, Object> authResult = tokenService.validateToken(loginDTO.getEmail(), loginDTO.getPassword());
+
+        // Check outcome status parameters to determine accurate HTTP delivery mapping
+        if (Boolean.TRUE.equals(authResult.get("success"))) {
+            return ResponseEntity.ok(authResult);
+        }
+
+        // Returns an HTTP 401 Unauthorized status context for bad credentials
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(authResult);
+    }
+
 }

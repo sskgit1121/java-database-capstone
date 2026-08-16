@@ -1,27 +1,57 @@
-
 package com.project.back_end.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+
+import java.util.Map;
+
+import com.project.back_end.DTO.Login;
+// Internal domain models and service tier imports
+import com.project.back_end.models.Admin;
+import com.project.back_end.services.TokenService;
+
+/**
+ * 1. Set Up the Controller Class:
+ * Annotated with @RestController to handle web requests and return JSON responses.
+ * Uses RequestMapping with property placeholder interpolation to define a configurable base path.
+ */
+@RestController
+@RequestMapping("${api.path}admin")
 public class AdminController {
 
-// 1. Set Up the Controller Class:
-//    - Annotate the class with `@RestController` to indicate that it's a REST controller, used to handle web requests and return JSON responses.
-//    - Use `@RequestMapping("${api.path}admin")` to define a base path for all endpoints in this controller.
-//    - This allows the use of an external property (`api.path`) for flexible configuration of endpoint paths.
+    private final TokenService tokenService;
 
+    /**
+     * 2. Autowire Service Dependency:
+     * Uses clean constructor injection to autowire the token and authentication management service.
+     */
+    @Autowired
+    public AdminController(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
 
-// 2. Autowire Service Dependency:
-//    - Use constructor injection to autowire the `Service` class.
-//    - The service handles core logic related to admin validation and token checking.
-//    - This promotes cleaner code and separation of concerns between the controller and business logic layer.
+    /**
+     * 3. Define the adminLogin Method:
+     * Handles incoming HTTP POST requests for administrative authentication.
+     * Accepts a validated Admin credential object inside the JSON request body.
+     */
+    @PostMapping("/login")
+    public ResponseEntity<?> adminLogin(@Valid @RequestBody Login loginDto) {
+        // Delegates authentication logic to the validateAdmin method in the service layer
+        Map<String, Object> authResult = tokenService.validateAdmin(loginDto.getEmail(), loginDto.getPassword());
 
+        // Checks the outcome flag returned from the business tier to determine response codes
+        if (Boolean.TRUE.equals(authResult.get("success"))) {
+            return ResponseEntity.ok(authResult);
+        }
 
-// 3. Define the `adminLogin` Method:
-//    - Handles HTTP POST requests for admin login functionality.
-//    - Accepts an `Admin` object in the request body, which contains login credentials.
-//    - Delegates authentication logic to the `validateAdmin` method in the service layer.
-//    - Returns a `ResponseEntity` with a `Map` containing login status or messages.
-
-
-
+        // Returns an HTTP 401 Unauthorized status headers mapping context for bad logins
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(authResult);
+    }
 }
-

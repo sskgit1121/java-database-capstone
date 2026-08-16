@@ -1,20 +1,32 @@
 package com.project.back_end.services;
 
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.project.back_end.models.Admin;
+import com.project.back_end.repo.AdminRepository;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+
 @Service
 public class TokenService {
+	
+	private final AdminRepository adminRepository;
+	
+	@Autowired
+	public TokenService(AdminRepository adminRepository) {
+		this.adminRepository = adminRepository;
+	}
 // 1. **@Component Annotation**
 // The @Component annotation marks this class as a Spring component, meaning Spring will manage it as a bean within its application context.
 // This allows the class to be injected into other Spring-managed components (like services or controllers) where it's needed.
@@ -152,6 +164,31 @@ public class TokenService {
             }
 
             return validationContext;
+        }
+        
+        /**
+         * Explicitly defines the validateAdmin wrapper to satisfy the direct method signature 
+         * invoked within your AdminController layer, resolving the compilation error.
+         * 
+         * @param token the incoming authentication string from the request path or header
+         * @param role the target validation scope parameter
+         * @return a validation map matching the structural verification definitions
+         */
+        public Map<String, Object> validateAdmin(String email, String password) {
+            Admin admin = adminRepository.findByEmail(email).orElse(null);
+            Map<String, Object> response = new HashMap<>();
+            
+            if (admin != null && admin.getPassword().equals(password)) {
+                String token = generateToken(email);
+                response.put("success", true);
+                response.put("token", token);
+                response.put("username", admin.getUsername());
+                return response;
+            }
+            
+            response.put("success", false);
+            response.put("message", "Invalid administrative email or password mismatch configuration.");
+            return response;
         }
     }
 
